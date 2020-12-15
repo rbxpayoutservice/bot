@@ -9,7 +9,7 @@ const config = require("./config.json");
 const robloxInterface = require('./utils/robloxInterfaces');
 const fruitiesInterface = require('./utils/fruitiesInterface');
 
-const adapter = new FileSync(path.join(__dirname, '..', 'suggestions.json'));
+const adapter = new FileSync(path.join(__dirname, 'suggestions.json'));
 const db = lowdb(adapter);
 
 db.defaults({ suggestions: [] }).write();
