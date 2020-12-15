@@ -1,5 +1,5 @@
 const buildEmbed = require('../utils/buildEmbed');
-const { getRobloxByDiscord } = require('../utils/roverInterface');
+const getRobloxByDiscord = require('../utils/bloxlinkInterface');
 
 module.exports.run = async (client, message) => {
     const userToUpdate = message.mentions.users.first() || message.author;
@@ -11,12 +11,12 @@ module.exports.run = async (client, message) => {
         try {
             const res = await getRobloxByDiscord(userToUpdate.id);
 
-            if (res.status === 'error' && res.errorCode === 404) {
+            if (res.error) {
                 return message.channel.send(buildEmbed('Error!', ':x: This user has not verified themselves yet!', null, 'error', message.author))
-            } else if(res.status === 'error') throw res;
+            }
 
             userInfo = {
-                robloxId: res.robloxId,
+                robloxId: res.primaryAccount,
                 groupRank: 0
             };
         } catch (err) {

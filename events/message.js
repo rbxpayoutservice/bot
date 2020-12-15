@@ -1,4 +1,4 @@
-const { getRobloxByDiscord } = require('../utils/roverInterface');
+const getRobloxByDiscord = require('../utils/bloxlinkInterface');
 const { RichEmbed } = require('discord.js');
 
 /**
@@ -30,7 +30,7 @@ module.exports = async (client, message) => {
 				try {
 					const response = await getRobloxByDiscord(message.author.id);
 
-					if (response.errorCode === 404) {
+					if (response.error) {
 						const embed = new RichEmbed()
 							.setTitle('Please click here to verify your account')
 							.setDescription(`It looks like you are not verified! In order to execute this command, please verify your account by running \`fr!verify\` to confirm your rank is at least \`${client.roles.find(role => role.rank === commandFile.config.minimumRank).name}\``)
@@ -44,14 +44,14 @@ module.exports = async (client, message) => {
 						return message.channel.send(embed);
 					}
 
-					if (response.status === 'ok' && response.robloxUsername && response.robloxId) {
+					if (response.status === 'ok' && response.primaryAccount) {
 						let groupInfo
 			
 						try {
-							groupInfo = await client.robloxInterface.getUserGroupInfo(response.robloxId);
+							groupInfo = await client.robloxInterface.getUserGroupInfo(response.primaryAccount);
 
 							client.userCache[message.author.id] = {
-								robloxId: response.robloxId,
+								robloxId: response.primaryAccount,
 								groupRank: groupInfo.rank
 							}		
 						} catch (err) {

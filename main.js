@@ -15,7 +15,7 @@ const db = lowdb(adapter);
 db.defaults({ suggestions: [] }).write();
 
 (async () => {
-    const client = new Discord.Client();
+    const client = new Discord.Client({ disableMentions: 'everyone' });
     
     client.commands = new Discord.Collection();
 	client.config = config;

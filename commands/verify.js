@@ -1,16 +1,16 @@
 const { RichEmbed } = require('discord.js');
 const buildEmbed = require('../utils/buildEmbed');
-const { getRobloxByDiscord } = require('../utils/roverInterface');
+const getRobloxByDiscord = require('../utils/bloxlinkInterface');
 
 module.exports.run = async (client, message) => {
     try {
         const response = await getRobloxByDiscord(message.author.id);
     
-        if (response.errorCode === 404) {
+        if (response.error) {
             const embed = new RichEmbed()
                 .setTitle('Please click here to verify your account')
                 .setDescription('Once you verify, you are good to go!')
-                .setURL('https://verify.eryn.io')
+                .setURL('https://blox.link/verify/')
                 .setColor('#4fe647')
                 .setFooter(
                     `Requested by ${message.author.tag}`,
@@ -20,20 +20,20 @@ module.exports.run = async (client, message) => {
             return message.channel.send(embed);
         }
 
-        if (response.status === 'ok' && response.robloxUsername && response.robloxId) {
+        if (response.status === 'ok' && response.primaryAccount) {
             let groupInfo
 
             try {
-                groupInfo = await client.robloxInterface.getUserGroupInfo(response.robloxId);
+                groupInfo = await client.robloxInterface.getUserGroupInfo(response.primaryAccount);
             } catch (err) {
-                if(!user) return message.channel.send(buildEmbed('Error!', ':x: Something unexpected happened and we were unable to verify your rank in the group', null, 'error', message.author))
+                if(!user) return message.channel.send(buildEmbed('Error!', ':x: Something unexpected happened and we were unable to verify your rank in the group. Please try again.', null, 'error', message.author))
                 client.logger.warn(`Failed to verify ${message.author.id}, couldn't get group info`)
                 client.logger.warn(groupInfo);
                 return;
             }
 
             client.userCache[message.author.id] = {
-                robloxId: response.robloxId,
+                robloxId: response.primaryAccount,
                 groupRank: groupInfo.rank
             }
 

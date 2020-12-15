@@ -1,7 +1,7 @@
 {
-  "name": "securitybot",
-  "version": "1.0.0",
-  "description": "An open-source Discord captcha verification bot",
+  "name": "FruitiesBot",
+  "version": "2.0.0",
+  "description": "Official Fruitie's Bot",
   "main": "main.js",
   "scripts": {
     "dev": "nodemon ."
@@ -14,7 +14,7 @@
   "dependencies": {
     "chrono-node": "^2.1.8",
     "colors": "^1.4.0",
-    "discord.js": "^11.5.1",
+    "discord.js": "^12.5.1",
     "json-stringify-safe": "^5.0.1",
     "lowdb": "^1.0.0",
     "random-words": "^1.1.1",

@@ -8,28 +8,9 @@ class FruitiesInterface {
 
     get headers() {
         return {
-            "X-Auth-Key": this.serviceKey
+            "X-Auth-Key": this.serviceKey,
+            "User-Agent": "FruitiesBot"
         }
-    }
-
-    getActivity(userId, weekId) {
-        let query = '';
-
-        if(weekId) query += `?weekId=${weekId}`
-
-        return new Promise((resolve, reject) => {
-            request({
-                url: `${this.serviceDomain}/activity/${userId}${query}`,
-                headers: this.headers,
-                json: true
-            }, (err, res, body) => {
-                if(err) reject(err);
-
-                if (res.statusCode !== 200 && res.statusCode !== 204) reject(`Status: ${res.statusCode} Response: ${JSON.stringify(body)}`);
-
-                resolve(body);
-            });
-        });
     }
 
     shutdown(game) {
@@ -71,25 +52,6 @@ class FruitiesInterface {
                 resolve(body);
             });
         }); 
-    }
-
-    getTopActivity(users, type, weekId) {
-        let query = `?type=${type}${users.map(user => `&users=${user}`).join('')}`;
-        if(weekId) query += `&weekId=${weekId}`
-
-        return new Promise((resolve, reject) => {
-            request({
-                url: `${this.serviceDomain}/activity/top${query}`,
-                headers: this.headers,
-                json: true
-            }, (err, res, body) => {
-                if (err) reject(err);
-
-                if (res.statusCode !== 200 && res.statusCode !== 204) reject(`Status: ${res.statusCode} Response: ${JSON.stringify(body)}`);
-
-                resolve(body);
-            })
-        });
     }
 
     getBans(userId) {
@@ -259,7 +221,7 @@ class FruitiesInterface {
 
                 resolve(body);
             });
-        })
+        });
     }
 }
 
