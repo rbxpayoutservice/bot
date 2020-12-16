@@ -3,7 +3,7 @@ module.exports.run = (client, message) => {
 		m.edit(
 			`API Latency: ${
 				m.createdTimestamp - message.createdTimestamp
-			}ms. Average heartbeat: ${Math.round(client.ping)}ms`
+			}ms. Average heartbeat: ${Math.round(client.ws.ping)}ms`
 		);
 	});
 };
