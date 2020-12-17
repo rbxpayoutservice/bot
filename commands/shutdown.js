@@ -1,7 +1,7 @@
 const buildEmbed = require('../utils/buildEmbed');
 
 module.exports.run = (client, message, args) => {
-    const game = args[0];
+    const game = args.join(' ');
     if(!game || !['ic', 'juice bar'].includes(game.toLowerCase())) return message.channel.send(buildEmbed('Error!', ':x: You must provide a game type of either `IC` or `Juice Bar`', null, 'error', message.author));
 
     try {   
