@@ -85,7 +85,7 @@ class Logger {
 		if (typeof _message === 'object' && !_message instanceof Error) {
 			message = stringify(_message, null, '  ');
 		} else {
-			if (_message.toString() === '[object Object]') {
+			if (_message.toString().includes('[object')) {
 				message = stringify(_message, null, '  ');
 			} else {				
 				message = _message;
