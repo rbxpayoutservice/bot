@@ -8,6 +8,11 @@ const { MessageEmbed } = require('discord.js');
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
 	if (message.channel.type === 'dm') return;
+	if (
+		process.env.NODE_ENV === 'Development' &&
+		message.channel.id !== client.config.testingServer
+	)
+		return;
 	if (!message.content.toLowerCase().startsWith(client.config.prefix)) return;
 
 	let args = message.content.split(/\s+/g);

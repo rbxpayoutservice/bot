@@ -1,13 +1,14 @@
 {
-    "token": "NzI5MDU4NzI2MzU0NDg1MzU1.XwDa3Q.FmbTfqNTP_0GeW31w9wOalOcZTQ",
-    "groupId": "6839425",
-    "prefix": "fr!",
-    "serviceDomain": "https://fruitiessystems.memester.xyz",
-    "serviceKey": "tvIjM92iTP3G4eXNDt6FcBwcD2ZmWMGY9G5Z2pJf",
-    "defaultEmbedColor": "#4fe647",
-    "errorEmbedColor": "#ff2617",
-    "minimumActivityTrackRank": 9,
-    "maximumActivityTrackRank": 255,
-    "owner": "632707235826368512",
-    "suggestionsChannel": "730336425983213588"
+	"token": "NzI5MDU4NzI2MzU0NDg1MzU1.XwDa3Q.FmbTfqNTP_0GeW31w9wOalOcZTQ",
+	"groupId": "6839425",
+	"prefix": "fr!",
+	"serviceDomain": "https://fruitiessystems.memester.xyz",
+	"serviceKey": "tvIjM92iTP3G4eXNDt6FcBwcD2ZmWMGY9G5Z2pJf",
+	"defaultEmbedColor": "#4fe647",
+	"errorEmbedColor": "#ff2617",
+	"minimumActivityTrackRank": 9,
+	"maximumActivityTrackRank": 255,
+	"owner": "632707235826368512",
+	"suggestionsChannel": "730336425983213588",
+	"testingServer": "686751173000429598"
 }

@@ -12,51 +12,26 @@ module.exports.run = (client, message, args) => {
 				const bans = response.bans;
 				let page = 1;
 
-				const embed = new MessageEmbed()
-					.setTitle(`${userName}'s Bans`)
-					.setURL(`https://www.roblox.com/users/${userId}/profile`)
-					.setThumbnail(
-						`https://www.roblox.com/bust-thumbnail/image?userId=${userId}&width=420&height=420&format=png `
-					)
-					.setColor(defaultEmbedColor);
+				const embed = buildEmbed(
+					`${userName}'s Bans`,
+					'',
+					`https://www.roblox.com/users/${userId}/profile`,
+					null,
+					message
+				);
+				embed.setThumbnail(
+					`https://www.roblox.com/bust-thumbnail/image?userId=${userId}&width=420&height=420&format=png`
+				);
 
 				if (!bans.length) {
 					embed.setDescription(
-						`Banned: \`false\`\n\n This user has no moderation history`
-					);
-					embed.setFooter(
-						`Requested by ${message.author.tag}`,
-						message.author.displayAvatarURL
+						`Banned: \`false\`\n\nThis user has no moderation history`
 					);
 					message.channel.send(embed);
 				} else {
 					const ban = bans[0];
 
-					let details = `
-						Banned: \`${response.isBanned}\` 
-
-                        ID: \`${ban.id}\`
-                        Reason: \`${ban.reason}\`
-                        Banned By: \`${
-													(await client.robloxInterface.getById(ban.admin))
-														.Username
-												} (${ban.admin})\`
-                        Banned At: \`${new Date(ban.at).toLocaleString()}\`
-                        Duration: \`${
-													ban.banType === 'Perm'
-														? ban.banType
-														: `${Math.ceil(
-																(ban.unixEndsAt - ban.unixAt) / 86400
-														  )} Days`
-												}\`
-                    `;
-
-					if (ban.endsAt) {
-						details += `Ends At: \`${new Date(ban.endsAt).toLocaleString()}\``;
-					}
-
-					embed.setDescription(details);
-
+					embed.setDescription(await buildPageEmbed(ban, response.isBanned));
 					embed.setFooter(
 						`Ban ${page} of ${bans.length}`,
 						message.author.displayAvatarURL
@@ -79,94 +54,33 @@ module.exports.run = (client, message, args) => {
 							});
 
 							back.on('collect', async (r) => {
-								r.remove(message.author);
+								r.users.remove(message.author);
 								if (page === 1) return;
 								page--;
 
 								const ban = bans[page - 1];
 
-								let details = `
-                                            Banned: \`${response.isBanned}\` 
-
-
-                                            ID: \`${ban.id}\`
-                                            Reason: \`${ban.reason}\`
-                                            Banned By: \`${
-																							(
-																								await client.robloxInterface.getById(
-																									ban.admin
-																								)
-																							).Username
-																						} (${ban.admin})\`
-                                            Banned At: \`${new Date(
-																							ban.at
-																						).toLocaleString()}\`
-                                            Duration: \`${
-																							ban.banType === 'Perm'
-																								? ban.banType
-																								: Math.ceil(
-																										(ban.unixEndsAt -
-																											ban.unixAt) /
-																											86400
-																								  )
-																						} Days\`
-                                        `;
-
-								if (ban.endsAt) {
-									details += `Ends At: \`${new Date(
-										ban.endsAt
-									).toLocaleString()}\``;
-								}
-
-								embed.setDescription(details);
+								embed.setDescription(
+									await buildPageEmbed(ban, response.isBanned)
+								);
 								embed.setFooter(
 									`Ban ${page} of ${bans.length}`,
 									message.author.displayAvatarURL
 								);
+
 								msg.edit(embed);
 							});
 
 							forward.on('collect', async (r) => {
-								r.remove(message.author);
+								r.users.remove(message.author);
 								if (page === bans.length) return;
 								page++;
 
 								const ban = bans[page - 1];
 
-								let details = `
-                                            Banned: \`${response.isBanned}\` 
-
-
-                                            ID: \`${ban.id}\`
-                                            Reason: \`${ban.reason}\`
-                                            Banned By: \`${
-																							(
-																								await client.robloxInterface.getById(
-																									ban.admin
-																								)
-																							).Username
-																						} (${ban.admin})\`
-                                            Banned At: \`${new Date(
-																							ban.at
-																						).toLocaleString()}\`
-                                            Duration: \`${
-																							ban.banType === 'Perm'
-																								? ban.banType
-																								: Math.ceil(
-																										(ban.unixEndsAt -
-																											ban.unixAt) /
-																											86400
-																								  )
-																						} Days\`
-                                        `;
-
-								if (ban.endsAt) {
-									details += `Ends At: \`${new Date(
-										ban.endsAt
-									).toLocaleString()}\``;
-								}
-
-								embed.setDescription(details);
+								embed.setDescription(
+									await buildPageEmbed(ban, response.isBanned)
+								);
 								embed.setFooter(
 									`Ban ${page} of ${bans.length}`,
 									message.author.displayAvatarURL
@@ -193,6 +107,31 @@ module.exports.run = (client, message, args) => {
 		.catch((err) => {
 			if (err) client.logger.error(err);
 		});
+
+	async function buildPageEmbed(ban, isBanned) {
+		let details = `
+				Banned: \`${isBanned}\` 
+
+
+				ID: \`${ban.id}\`
+				Reason: \`${ban.reason}\`
+				Banned By: \`${(await client.robloxInterface.getById(ban.admin)).Username} (${
+			ban.admin
+		})\`
+				Banned At: \`${new Date(ban.at).toLocaleString()}\`
+				Duration: \`${
+					ban.banType === 'Perm'
+						? ban.banType
+						: `${Math.ceil((ban.unixEndsAt - ban.unixAt) / 86400)} Days`
+				}\`
+			`;
+
+		if (ban.endsAt) {
+			details += `Ends At: \`${new Date(ban.endsAt).toLocaleString()}\``;
+		}
+
+		return details;
+	}
 };
 
 module.exports.config = {
